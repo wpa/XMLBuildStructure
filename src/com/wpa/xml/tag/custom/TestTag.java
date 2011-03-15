@@ -10,7 +10,6 @@ public class TestTag extends AbstractTag {
 
 	@Override
 	public void processTag(Object tagObject) {
-		// TODO Auto-generated method stub
 
 	}
 
