@@ -12,7 +12,9 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.wpa.xml.tag.AbstractTag;
 import com.wpa.xml.tag.TagProcessor;
+import com.wpa.xml.tag.custom.TestTag;
 
 /**
  * 
@@ -30,6 +32,8 @@ public class ProjectConfig {
 		try {
 			SAXParser saxParser = factory.newSAXParser();
 			TagProcessor processor = new TagProcessor();
+			AbstractTag tag = new TestTag();
+			processor.addObserver(tag);
 			saxParser.parse(projectConfigInput, new ProjectConfigHandler(
 					processor));
 		} catch (Exception e) {

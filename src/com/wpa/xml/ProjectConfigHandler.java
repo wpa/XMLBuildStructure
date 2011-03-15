@@ -8,7 +8,9 @@
 package com.wpa.xml;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -24,7 +26,7 @@ public class ProjectConfigHandler extends DefaultHandler {
 
 	private final TagProcessor processor;
 	private final Map<String, Object> tagMap = new HashMap<String, Object>();
-	private Object[] tagContent;
+	private final Queue<String> tagQueue = new LinkedList<String>();
 
 	public ProjectConfigHandler(TagProcessor processor) {
 		this.processor = processor;
@@ -39,10 +41,10 @@ public class ProjectConfigHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
-
-		tagContent = new Object[2];
+		Object[] tagContent = new Object[2];
+		tagContent[0] = processAttributes(attributes);
 		tagMap.put(qName, tagContent);
-		tagContent[0] = attributes;
+		tagQueue.offer(qName);
 
 	}
 
@@ -52,7 +54,7 @@ public class ProjectConfigHandler extends DefaultHandler {
 		for (int i = start; i < start + length; i++) {
 			content.append(ch[i]);
 		}
-		tagContent[1] = content.toString();
+		((Object[]) tagMap.get(tagQueue.peek()))[1] = content.toString();
 	}
 
 	/*
@@ -64,7 +66,17 @@ public class ProjectConfigHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
-		processor.processTag(qName, tagMap.get(qName));
+		processor.processTag(qName, tagMap.get(tagQueue.poll()));
+	}
+
+	private Map<String, String> processAttributes(Attributes attributes) {
+
+		Map<String, String> attributesMap = new HashMap<String, String>();
+		for (int i = 0; i < attributes.getLength(); i++) {
+			attributesMap.put(attributes.getQName(i), attributes.getValue(i));
+
+		}
+		return attributesMap;
 	}
 
 }

@@ -7,6 +7,7 @@
 
 package com.wpa.xml.tag;
 
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,14 +29,15 @@ public abstract class AbstractTag implements Observer {
 		return supportedTag.equals(tag);
 	}
 
-	final void doProcessTag(Object tagObject) {
+	public final void update(Observable tagProcessor, Object object) {
+		TagProcessor processor = (TagProcessor) tagProcessor;
 
+		if (processor.getTagName().equals(supportedTag)) {
+			processTag(processor.getAttributes(object), processor
+					.getValue(object));
+		}
 	}
 
-	public final void update(Observable o, Object arg) {
-		System.out.println(o.getClass().getCanonicalName());
+	public abstract void processTag(Map<String, String> attributes, String value);
 
-	}
-
-	abstract public void processTag(Object tagObject);
 }

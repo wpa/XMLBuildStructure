@@ -7,9 +7,8 @@
 
 package com.wpa.xml.tag;
 
+import java.util.Map;
 import java.util.Observable;
-
-import org.xml.sax.Attributes;
 
 public class TagProcessor extends Observable {
 
@@ -27,14 +26,13 @@ public class TagProcessor extends Observable {
 	}
 
 	String getValue(Object object) {
-
 		Object[] contents = (Object[]) object;
 		return (String) contents[1];
 	}
 
-	Attributes getAttributes(Object object) {
-
+	@SuppressWarnings("unchecked")
+	Map<String, String> getAttributes(Object object) {
 		Object[] contents = (Object[]) object;
-		return (Attributes) contents[0];
+		return (Map<String, String>) contents[0];
 	}
 }
